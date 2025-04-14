@@ -10,13 +10,13 @@
 Add this to your `Cargo.toml`:
 ```toml
 [dependencies]
-discord-webhook-rs = "1.0.1"
+discord-webhook-rs = "1.0.2"
 ```
 
 ## Example Usage
 
 ```rust
-use discord_webhook_rs::{Author, Embed, Error, Field, Footer, Webhook};
+use discord_webhook_rs::{Webhook, Error, Embed, Author, Field, Footer};
 
 const WEBHOOK_URL: &str = "https://discord.com/api/webhooks/...";
 
