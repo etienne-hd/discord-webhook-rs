@@ -21,6 +21,7 @@ pub struct Webhook {
     avatar_url: Option<String>,
     content: Option<String>,
     embeds: Vec<Embed>,
+    client: Client,
 }
 
 impl Webhook {
@@ -31,7 +32,13 @@ impl Webhook {
             avatar_url: None,
             content: None,
             embeds: Vec::new(),
+            client: Client::new(),
         }
+    }
+
+    pub fn set_client(mut self, client: Client) -> Self {
+        self.client = client;
+        self
     }
 
     pub fn username(mut self, username: impl Into<String>) -> Self {
@@ -98,8 +105,8 @@ impl Webhook {
     }
 
     pub fn send(self) -> Result<Response, Error> {
-        let client = Client::new();
-        let req = client
+        let req = self
+            .client
             .post(&self.url)
             .header("Content-Type", "application/json")
             .body(self.build()?.to_string());

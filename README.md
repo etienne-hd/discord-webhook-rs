@@ -10,7 +10,7 @@
 Add this to your `Cargo.toml`:
 ```toml
 [dependencies]
-discord-webhook-rs = "1.0.2"
+discord-webhook-rs = "1.0.3"
 ```
 
 ## Example Usage

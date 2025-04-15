@@ -1,3 +1,7 @@
+## v1.0.3
+- Can now set your own reqwest client with method "set_client" on Webhook struct
+- Change order of module in mod.rs
+
 ## v1.0.2
 - Separation of all structures
 - Move build verification from field structure to his verify method
