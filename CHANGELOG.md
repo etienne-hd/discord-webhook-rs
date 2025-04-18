@@ -1,3 +1,6 @@
+## v1.0.4
+- Can now add files
+
 ## v1.0.3
 - Can now set your own reqwest client with method "set_client" on Webhook struct
 - Change order of module in mod.rs

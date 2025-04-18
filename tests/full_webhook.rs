@@ -27,8 +27,10 @@ fn full_webhook() -> Result<(), Error> {
                 )
                 .thumbnail("https://avatars.githubusercontent.com/u/145381924")
                 .image("https://avatars.githubusercontent.com/u/145381924")
-                .url("https://github.com/etienne-hd"),
+                .url("https://github.com/etienne-hd")
         )
+        .add_file("README.md")
+        .add_file("LICENSE")
         .send()?;
 
     Ok(())

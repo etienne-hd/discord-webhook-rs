@@ -1,11 +1,18 @@
 use super::Embed;
 
-use reqwest::blocking::{Client, Response};
+use reqwest::blocking::{
+    Client, Response,
+    multipart::{Form, Part},
+};
 use serde_json::{Map, Value};
+use std::fs;
+use std::path::Path;
 
 #[derive(Debug)]
 pub enum Error {
     Request(reqwest::Error),
+    File(std::io::Error),
+    MaxFile,
     MaxContent,
     MaxEmbed,
     MaxField,
@@ -21,6 +28,7 @@ pub struct Webhook {
     avatar_url: Option<String>,
     content: Option<String>,
     embeds: Vec<Embed>,
+    files: Vec<String>,
     client: Client,
 }
 
@@ -32,6 +40,7 @@ impl Webhook {
             avatar_url: None,
             content: None,
             embeds: Vec::new(),
+            files: Vec::new(),
             client: Client::new(),
         }
     }
@@ -61,6 +70,11 @@ impl Webhook {
         self
     }
 
+    pub fn add_file(mut self, file: impl Into<String>) -> Self {
+        self.files.push(file.into());
+        self
+    }
+
     fn verify(&self) -> Result<(), Error> {
         if let Some(content) = &self.content {
             if content.len() > 2000 {
@@ -75,7 +89,38 @@ impl Webhook {
         Ok(())
     }
 
-    fn build(&self) -> Result<Value, Error> {
+    fn build_form(&self) -> Result<Form, Error> {
+        if self.files.len() > 10 {
+            return Err(Error::MaxFile);
+        }
+
+        let mut form = Form::new();
+
+        for (i, file_path) in self.files.iter().enumerate() {
+            let file_bytes = match fs::read(file_path) {
+                Err(why) => return Err(Error::File(why)),
+                Ok(data) => data,
+            };
+
+            let filename = Path::new(file_path)
+                .file_name()
+                .and_then(|name| name.to_str())
+                .unwrap_or("file");
+
+            let part = Part::bytes(file_bytes.to_vec()).file_name(filename.to_string());
+
+            let part = match part.mime_str("application/octet-stream") {
+                Err(why) => return Err(Error::Request(why)),
+                Ok(data) => data,
+            };
+
+            form = form.part(format!("files[{}]", i), part);
+        }
+
+        Ok(form)
+    }
+
+    fn build_body(&self) -> Result<Value, Error> {
         self.verify()?;
 
         let mut obj = Map::new(); // Construct Body
@@ -105,11 +150,10 @@ impl Webhook {
     }
 
     pub fn send(self) -> Result<Response, Error> {
-        let req = self
-            .client
-            .post(&self.url)
-            .header("Content-Type", "application/json")
-            .body(self.build()?.to_string());
+        let mut form = self.build_form()?;
+        form = form.text("payload_json", self.build_body()?.to_string());
+
+        let req = self.client.post(&self.url).multipart(form);
 
         match req.send() {
             Ok(response) => Ok(response),

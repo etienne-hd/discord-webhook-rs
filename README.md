@@ -4,13 +4,14 @@
 ## Features
 - Send rich embeds with customizable fields, authors, and footers.
 - Set custom content, username, and avatar for your webhook.
+- Add up to 10 files to your webhook.
 - Simple and intuitive API for sending messages to Discord channels.
 
 ## Installation
 Add this to your `Cargo.toml`:
 ```toml
 [dependencies]
-discord-webhook-rs = "1.0.3"
+discord-webhook-rs = "1.0.4"
 ```
 
 ## Example Usage
@@ -32,8 +33,9 @@ fn main() -> Result<(), Error> {
                 .author(Author::new().name("Crab"))
                 .add_field(Field::new().name("Field 1").value("Value 1").inline(true))
                 .add_field(Field::new().name("Field 2").value("Value 2").inline(false))
-                .footer(Footer::new().text("footer")),
+                .footer(Footer::new().text("footer"))
         )
+        .add_file("my_file.txt")
         .send()?;
 
     Ok(())
