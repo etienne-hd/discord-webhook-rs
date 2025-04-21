@@ -59,15 +59,15 @@ impl Field {
 
         if let Some(name) = &self.name {
             obj.insert("name".into(), Value::String(name.clone()));
-        };
+        }
 
         if let Some(value) = &self.value {
             obj.insert("value".into(), Value::String(value.clone()));
-        };
+        }
 
         if let Some(inline) = &self.inline {
             obj.insert("inline".into(), Value::Bool(inline.clone()));
-        };
+        }
 
         Ok(Value::Object(obj))
     }

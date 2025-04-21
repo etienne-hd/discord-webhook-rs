@@ -49,11 +49,15 @@ impl Author {
 
         if let Some(name) = &self.name {
             obj.insert("name".into(), Value::String(name.clone()));
-        };
+        }
 
         if let Some(url) = &self.url {
             obj.insert("url".into(), Value::String(url.clone()));
-        };
+        }
+
+        if let Some(icon_url) = &self.icon_url {
+            obj.insert("icon_url".into(), Value::String(icon_url.clone()));
+        }
 
         Ok(Value::Object(obj))
     }

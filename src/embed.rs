@@ -146,7 +146,7 @@ impl Embed {
             for field in &self.fields {
                 fields.push(field.build()?);
             }
-        };
+        }
 
         // An embed can be sent if it contains at least one of these key
         if obj.contains_key("author")

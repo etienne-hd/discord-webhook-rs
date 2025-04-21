@@ -1,3 +1,6 @@
+## v1.0.5
+- Added icon_url for author (I forgot)
+
 ## v1.0.4
 - Can now add files
 

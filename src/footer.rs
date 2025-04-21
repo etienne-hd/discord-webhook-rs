@@ -42,11 +42,11 @@ impl Footer {
 
         if let Some(text) = &self.text {
             obj.insert("text".into(), Value::String(text.clone()));
-        };
+        }
 
         if let Some(icon_url) = &self.icon_url {
             obj.insert("icon_url".into(), Value::String(icon_url.clone()));
-        };
+        }
 
         Ok(Value::Object(obj))
     }

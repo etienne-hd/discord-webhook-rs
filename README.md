@@ -11,7 +11,7 @@
 Add this to your `Cargo.toml`:
 ```toml
 [dependencies]
-discord-webhook-rs = "1.0.4"
+discord-webhook-rs = "1.0.5"
 ```
 
 ## Example Usage
